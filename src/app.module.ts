@@ -6,6 +6,7 @@ import { Verification } from './users/entities/verification.entity';
 import { User } from './users/entities/user.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from './users/users.module';
+import { JwtModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -24,34 +25,33 @@ import { UsersModule } from './users/users.module';
       }),
     }),
     TypeOrmModule.forRoot({
-      type: "postgres",
+      type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== "prod",
+      synchronize: process.env.NODE_ENV !== 'prod',
       logging:
-        process.env.NODE_ENV !== "prod" && process.env.NODE_ENV !== "test",
-      entities: [
-        User,
-        Verification,
-      ],
+        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
+      entities: [User, Verification],
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true, // enable WebSocket
       autoSchemaFile: true,
       context: ({ req, connection }) => {
-        const TOKEN_KEY = "x-jwt";
+        const TOKEN_KEY = 'x-jwt';
         return {
           token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
         };
       },
+    }),
+    JwtModule.forRoot({
+      privateKey: process.env.SECRET_KEY,
     }),
     UsersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-}
+export class AppModule {}

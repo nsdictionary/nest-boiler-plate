@@ -10,7 +10,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly users: Repository<User>,
     @InjectRepository(Verification)
-      verifications: Repository<Verification>,
+    verifications: Repository<Verification>,
     // private readonly jwtService: JwtService,
   ) {}
 }
