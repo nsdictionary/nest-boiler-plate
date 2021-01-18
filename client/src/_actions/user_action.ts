@@ -21,7 +21,7 @@ export async function loginUser(dataToSubmit: any) {
 }
 
 export async function auth() {
-  const request = await axios.get(`${USER_SERVER}/auth`);
+  const request = await axios.get(`${USER_SERVER}/me`);
 
   return {
     type: AUTH_USER,
